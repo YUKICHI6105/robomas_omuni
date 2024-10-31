@@ -20,9 +20,9 @@ void pubsub::move_omuni3(float x_vel, float y_vel, float omega)
   // maxSpeed = std::sqrt(x_raw * x_raw + y_raw * y_raw);
   if (((x_vel != 0) || (y_vel != 0)) || (r != 0))
   {
-    robomas_target1_publisher_->publish(robomas::get_target(-x_vel / 0.03 + r));
-    robomas_target2_publisher_->publish(robomas::get_target((x_vel * COS_60_DEG - y_vel * COS_30_DEG) / 0.03 + r));
-    robomas_target3_publisher_->publish(robomas::get_target((x_vel * COS_60_DEG + y_vel * COS_30_DEG) / 0.03 + r));
+    robomas_target1_publisher_->publish(robomas::get_target((-x_vel / 0.03 + r)*36));
+    robomas_target2_publisher_->publish(robomas::get_target(((x_vel * COS_60_DEG - y_vel * COS_30_DEG) / 0.03 + r)*36));
+    robomas_target3_publisher_->publish(robomas::get_target(((x_vel * COS_60_DEG + y_vel * COS_30_DEG) / 0.03 + r)*36));
 
     count = 0;
 
@@ -47,14 +47,16 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 {
 
   //    RCLCPP_INFO(this->get_logger(), "I heard:");
-  if (msg->buttons[this->get_parameter("velButton").as_int()] == 1)
+  // if (msg->buttons[this->get_parameter("velButton").as_int()] == 1)
+  if (msg->buttons[7] == 1)
   {
     robomas_frame_publisher_->publish(robomas::get_vel_frame(1, 0));
     robomas_frame_publisher_->publish(robomas::get_vel_frame(2, 0));
     robomas_frame_publisher_->publish(robomas::get_vel_frame(3, 0));
   }
 
-  if (msg->buttons[this->get_parameter("disButton").as_int()] == 1)
+  // if (msg->buttons[this->get_parameter("disButton").as_int()] == 1)
+  if (msg->buttons[0] == 1)
   {
     robomas_frame_publisher_->publish(robomas::get_dis_frame(1, 0));
     robomas_frame_publisher_->publish(robomas::get_dis_frame(2, 0));
@@ -66,11 +68,11 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
   float r = 0;
   if (msg->buttons[4] == 1)
   {
-    r = 10.0f; // ↑左回転
+    r = 3.0f; // ↑左回転
   }
   else if (msg->buttons[5] == 1)
   {
-    r = -10.0f; // 右回転
+    r = -3.0f; // 右回転
   }
   else if (msg->buttons[4] == msg->buttons[5])
   {
